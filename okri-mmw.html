@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>명민원 약속처방 사업화 개발 기획(안)</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+      color: #1C2833;
+      background: #F7F9FC;
+      padding: 20px 16px 40px;
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* ════════════════════════════════════
+       공통 레이아웃
+    ════════════════════════════════════ */
+    .doc  { max-width: 600px; margin: 0 auto; }
+    .page { max-width: 600px; margin: 0 auto; padding: 20px 0 40px; }
+
+    /* ── 페이지 구분선 ── */
+    .page-break {
+      max-width: 600px;
+      margin: 48px auto;
+      border: none;
+      border-top: 2px dashed #B5D4F4;
+      position: relative;
+    }
+    .page-break::after {
+      content: '별첨';
+      position: absolute;
+      top: -11px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #F7F9FC;
+      padding: 0 14px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #185FA5;
+      letter-spacing: 0.1em;
+    }
+
+    /* ════════════════════════════════════
+       기획안 스타일  (.doc 범위)
+    ════════════════════════════════════ */
+    .doc .cover {
+      border-bottom: 3px solid #185FA5;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+    .doc .cover-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #1C2833;
+      line-height: 1.35;
+      margin-bottom: 6px;
+    }
+    .doc .cover-sub {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    .doc .cover-meta {
+      text-align: right;
+      font-size: 13px;
+      color: #0C447C;
+    }
+    .doc .cover-meta b { font-weight: 700; }
+
+    .doc .section { margin-bottom: 28px; }
+    .doc .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a1a;
+      border-bottom: 1.5px solid #B5D4F4;
+      padding-bottom: 6px;
+      margin-bottom: 14px;
+    }
+    .doc .section p {
+      font-size: 15px;
+      line-height: 1.8;
+      color: #444;
+    }
+
+    .inforow {
+      display: flex;
+      border: 1px solid #dde4ef;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 7px;
+    }
+    .inforow-label {
+      background: #E6F1FB;
+      color: #0C447C;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 10px 12px;
+      min-width: 76px;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .inforow-val {
+      font-size: 14px;
+      color: #1C2833;
+      padding: 10px 12px;
+      line-height: 1.6;
+    }
+
+    .phase-card {
+      background: #fff;
+      border: 1px solid #dde4ef;
+      border-radius: 10px;
+      padding: 16px 16px 16px 20px;
+      position: relative;
+      margin-bottom: 10px;
+    }
+    .phase-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 5px;
+      border-radius: 10px 0 0 10px;
+    }
+    .phase-1::before { background: #378ADD; }
+    .phase-2::before { background: #1D9E75; }
+    .phase-3::before { background: #BA7517; }
+    .phase-4::before { background: #993556; }
+
+    .phase-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+    .phase-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #1C2833;
+      line-height: 1.3;
+    }
+    .phase-period {
+      font-size: 13px;
+      color: #888;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .phase-desc {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+    .phase-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .item-label {
+      font-size: 11px;
+      color: #999;
+      font-weight: 700;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .item-val {
+      font-size: 14px;
+      color: #1C2833;
+      line-height: 1.65;
+    }
+
+    .agenda-list { display: flex; flex-direction: column; gap: 8px; }
+    .agenda-item { display: flex; gap: 10px; align-items: flex-start; }
+    .agenda-num {
+      min-width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #E6F1FB;
+      color: #0C447C;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .agenda-text {
+      font-size: 15px;
+      color: #1C2833;
+      line-height: 1.6;
+    }
+
+    /* ════════════════════════════════════
+       별첨 스타일  (.page 범위)
+    ════════════════════════════════════ */
+    .page .doc-header { margin-bottom: 28px; }
+    .page .doc-header h1 {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      line-height: 1.3;
+    }
+    .page .doc-header .subtitle {
+      font-size: 13px;
+      color: #555;
+      margin-top: 5px;
+    }
+    .doc-meta {
+      text-align: right;
+      font-size: 12.5px;
+      color: #1a6ab5;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+    .divider {
+      border: none;
+      border-top: 2px solid #1a6ab5;
+      margin: 14px 0 30px;
+    }
+    .divider-thin {
+      border: none;
+      border-top: 1px solid #d8d8d8;
+      margin: 28px 0;
+    }
+
+    .page .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 16px;
+      padding-bottom: 6px;
+    }
+    .sub-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #1a6ab5;
+      margin: 20px 0 8px;
+      border-bottom: 1px solid #cce0f5;
+      padding-bottom: 4px;
+    }
+
+    .overview-box {
+      background: #f4f8fd;
+      border-left: 4px solid #1a6ab5;
+      padding: 16px 20px;
+      border-radius: 0 6px 6px 0;
+      margin-bottom: 10px;
+      font-size: 13.5px;
+      color: #333;
+    }
+
+    .label-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 6px;
+    }
+    .label-table tr { border-bottom: 1px solid #e8e8e8; }
+    .label-table tr:last-child { border-bottom: none; }
+    .label-table td.label {
+      background: #1a6ab5;
+      color: #fff;
+      font-weight: 600;
+      font-size: 12.5px;
+      width: 108px;
+      padding: 10px 14px;
+      white-space: nowrap;
+      vertical-align: top;
+    }
+    .label-table td.value {
+      background: #f7f9fc;
+      padding: 10px 16px;
+      font-size: 13.5px;
+      vertical-align: top;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 6px;
+      font-size: 13px;
+    }
+    .data-table thead tr { background: #1a6ab5; color: #fff; }
+    .data-table thead th {
+      padding: 9px 12px;
+      font-weight: 600;
+      font-size: 12.5px;
+      text-align: center;
+    }
+    .data-table thead th:first-child { text-align: left; }
+    .data-table tbody tr { border-bottom: 1px solid #e5e5e5; }
+    .data-table tbody tr:nth-child(even) { background: #f8fafd; }
+    .data-table tbody tr.total-row { background: #eef3fa; font-weight: 600; }
+    .data-table tbody td { padding: 9px 12px; vertical-align: middle; text-align: center; }
+    .data-table tbody td:first-child { text-align: left; }
+
+    .step-card {
+      border-left: 5px solid #1a6ab5;
+      background: #f7f9fc;
+      border-radius: 0 8px 8px 0;
+      padding: 18px 22px;
+      margin-bottom: 12px;
+    }
+    .step-card.green { border-color: #27ae60; background: #f4fbf6; }
+    .step-card .step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .step-card .step-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1a1a1a;
+    }
+    .step-card.green .step-title { color: #1a5c30; }
+    .step-card .step-note { font-size: 12px; color: #888; }
+    .step-card p { font-size: 13.5px; color: #444; margin-bottom: 12px; }
+    .step-card .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .step-card .col-title {
+      font-size: 11.5px;
+      color: #1a6ab5;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .step-card ul { list-style: none; padding: 0; }
+    .step-card ul li {
+      font-size: 13px;
+      color: #333;
+      padding: 2px 0 2px 14px;
+      position: relative;
+    }
+    .step-card ul li::before {
+      content: '·';
+      position: absolute;
+      left: 3px;
+      color: #1a6ab5;
+      font-weight: 700;
+    }
+
+    .notice-box {
+      border-left: 4px solid #e67e22;
+      background: #fffbf4;
+      padding: 14px 18px;
+      border-radius: 0 6px 6px 0;
+      margin: 12px 0;
+      font-size: 13px;
+    }
+    .notice-box .notice-title { font-weight: 700; color: #c0392b; margin-bottom: 6px; }
+    .success-box {
+      border-left: 4px solid #27ae60;
+      background: #f4fbf6;
+      padding: 14px 18px;
+      border-radius: 0 6px 6px 0;
+      margin: 12px 0;
+      font-size: 13px;
+    }
+    .success-box .success-title { font-weight: 700; color: #1e8449; margin-bottom: 6px; }
+    .info-box {
+      border-left: 4px solid #1a6ab5;
+      background: #f4f8fd;
+      padding: 14px 18px;
+      border-radius: 0 6px 6px 0;
+      margin: 12px 0;
+      font-size: 13px;
+    }
+    .info-box .info-title { font-weight: 700; color: #1a4a80; margin-bottom: 8px; }
+
+    .tag {
+      display: inline-block;
+      padding: 2px 9px;
+      border-radius: 12px;
+      font-size: 11.5px;
+      font-weight: 600;
+    }
+    .tag-blue   { background: #ddeeff; color: #1a4a80; }
+    .tag-green  { background: #d4edda; color: #155724; }
+    .tag-orange { background: #fde8cc; color: #7d4600; }
+    .tag-red    { background: #fde8e8; color: #922; }
+
+    .desc-list { margin: 0; padding: 0; list-style: none; }
+    .desc-list li {
+      display: flex;
+      gap: 8px;
+      padding: 5px 0;
+      border-bottom: 1px dashed #e0e8f0;
+      font-size: 13px;
+      align-items: flex-start;
+    }
+    .desc-list li:last-child { border-bottom: none; }
+    .desc-list .term { font-weight: 700; color: #1a4a80; white-space: nowrap; min-width: 80px; }
+    .desc-list .def { color: #333; }
+
+    .body-text { font-size: 13.5px; color: #333; margin-bottom: 10px; }
+
+    section { margin-bottom: 36px; }
+  </style>
+</head>
+<body>
+
+  <!-- ════════════════════════════════════
+       기획안 본문
+  ════════════════════════════════════ -->
+  <div class="doc">
+
+    <div class="cover">
+      <div class="cover-title">명민원 약속처방 사업화 개발 기획(안)</div>
+      <div class="cover-sub">인지기능 한의 진료모델 구축 및 약속처방 상품화 — 단계별 추진 계획</div>
+      <div class="cover-meta"><b>260421&nbsp;&nbsp;OKRI (옥천당한의약연구소)</b></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">1. 배경</div>
+      <p>명민원은 강석만 원장님의 임상 경험을 바탕으로 개발된 인지기능 개선 처방으로, 메디포럼 주관 동물실험 및 임상 연구가 완료되어 논문으로 공식 출판된 상태입니다. 과학적 기반이 확보된 만큼, 지금 단계에서 필요한 것은 원처방자 외의 임상가도 활용할 수 있는 진료모델과 그것을 뒷받침하는 제품화, 컨텐츠화 및 마케팅입니다.</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title">2. 현황</div>
+      <div class="inforow"><div class="inforow-label">연구 수행</div><div class="inforow-val">메디포럼(제약) 주관 동물실험 및 임상 연구</div></div>
+      <div class="inforow"><div class="inforow-label">근거 수준</div><div class="inforow-val">효력시험 완료, 논문 출판 — 상품화·베타테스트 진행에 충분한 기반</div></div>
+      <div class="inforow"><div class="inforow-label">적용 대상</div><div class="inforow-val">경도인지장애(MCI), 경도 치매, 인지기능 저하 예방을 원하는 중·고령층</div></div>
+      <div class="inforow"><div class="inforow-label">시장 특성</div><div class="inforow-val">한의 영역 내 인지기능 전문 진료모델 절대 부족 → 선점 효과 큼<br>인지기능 진료모델 부재로 단순 약속처방 활용에 어려움</div></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">3. 단계별 추진 계획</div>
+
+      <div class="phase-card phase-1">
+        <div class="phase-head">
+          <div class="phase-name">1단계 · 처방 구현 검증</div>
+          <div class="phase-period">~2개월</div>
+        </div>
+        <div class="phase-desc">기존 처방을 옥천당 탕전실 기준으로 재현하여, 원처방과 동등한 품질 및 효능이 구현되는지 확인하는 단계. 이 판단은 강석만 원장님만이 할 수 있으며, 검증 완료 후 진료모델 개발로 진입합니다.</div>
+        <div class="phase-body">
+          <div>
+            <div class="item-label">주요 활동</div>
+            <div class="item-val">옥천당 기준 처방 재현<br>시제품 제조 및 원장님 검토<br>품질·효능 동등성 확인</div>
+          </div>
+          <div>
+            <div class="item-label">강석만 원장님 역할</div>
+            <div class="item-val">시제품 복용 및 임상 평가<br>동등성 최종 확인</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card phase-2">
+        <div class="phase-head">
+          <div class="phase-name">2단계 · 진료모델 개발</div>
+          <div class="phase-period">3~8개월</div>
+        </div>
+        <div class="phase-desc">강석만 원장님의 고유 진료모델을 일반적인 진료모델로 개발할 소수 원장님들(후배)에게 연구용으로 처방을 무상 공급하고, 실제 임상에서 활용하며 인지기능 진료모델을 공동 구축합니다. 강석만 원장님은 이 과정에서 지속적으로 피드백·자문하는 역할을 맡습니다.</div>
+        <div class="phase-body">
+          <div>
+            <div class="item-label">진료모델 구성 요소</div>
+            <div class="item-val">진단 기준 및 변증<br>처방 방법 및 용량<br>처방 기간 및 가격<br>환자 교육·관리 방법<br>예후 및 티칭 방법</div>
+          </div>
+          <div>
+            <div class="item-label">강석만 원장님 역할</div>
+            <div class="item-val">후배 원장 추천 및 연결<br>임상 피드백 수렴 및 자문<br>진료모델 최종 방향 자문</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card phase-3">
+        <div class="phase-head">
+          <div class="phase-name">3단계 · 진료모델 확장 &amp; 강의 콘텐츠 제작</div>
+          <div class="phase-period">9개월~</div>
+        </div>
+        <div class="phase-desc">완성된 진료모델을 인지기능에 관심 있는 한의사 단체·모임에 오프라인 세미나·온라인 강의 형태로 제공합니다. 강석만 원장님 또는 2단계에 참여한 후배 원장님이 강사로 나서며, 이 단계는 자연스럽게 강석만 네트워크처방 형태로 운영됩니다.</div>
+        <div class="phase-body">
+          <div>
+            <div class="item-label">주요 활동</div>
+            <div class="item-val">인지기능 관련 학회·스터디그룹 접촉<br>오프라인 세미나 개최<br>하베스트 온라인 강의 제작</div>
+          </div>
+          <div>
+            <div class="item-label">강석만 원장님 역할</div>
+            <div class="item-val">강의 연자 (오프라인·온라인)<br>후배 원장 강사 육성·연계<br>네트워크 처방 운영 주도</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="phase-card phase-4">
+        <div class="phase-head">
+          <div class="phase-name">4단계 · 약속처방 상품화</div>
+        </div>
+        <div class="phase-desc">3단계의 네트워크처방 운영 성과를 기반으로 옥천당 약속처방으로 공식 상품화합니다. 강석만 원장님은 처방권·강의권 기반 로열티를 유지하면서, 콘텐츠와 강의의 지속적 고도화를 주도합니다.</div>
+        <div class="phase-body">
+          <div>
+            <div class="item-label">주요 활동</div>
+            <div class="item-val">약속처방 상품화 등록<br>R&amp;D 콘텐츠 보강<br>전국 유통망 적용</div>
+          </div>
+          <div>
+            <div class="item-label">강석만 원장님 역할</div>
+            <div class="item-val">처방권·강의권 기반 로열티<br>강의·콘텐츠 지속 고도화<br>사업화 연계 강의 활동</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">4. 향후 논의 의제</div>
+      <div class="agenda-list">
+        <div class="agenda-item"><div class="agenda-num">1</div><div class="agenda-text">명민원 처방 공개 범위 및 지식재산권 보호 방식 (공정기술 등)</div></div>
+        <div class="agenda-item"><div class="agenda-num">2</div><div class="agenda-text">진료모델 구성 시 추가 처방 필요 여부 및 개발 협력</div></div>
+        <div class="agenda-item"><div class="agenda-num">3</div><div class="agenda-text">2단계 후배 원장님 추천 및 모집 방식</div></div>
+        <div class="agenda-item"><div class="agenda-num">4</div><div class="agenda-text">오픈 상품화 방향 (네트워크처방 vs 약속처방) 최종 결정</div></div>
+      </div>
+    </div>
+
+  </div><!-- /doc -->
+
+  <!-- ════════════════════════════════════
+       페이지 구분선
+  ════════════════════════════════════ -->
+  <hr class="page-break" />
+
+  <!-- ════════════════════════════════════
+       별첨 본문
+  ════════════════════════════════════ -->
+  <div class="page">
+
+    <div class="doc-header">
+      <h1>별첨) 명민원 안전성 및 유효성 평가</h1>
+      <div class="subtitle">비임상·임상 연구 종합 요약 | PM012 (Gugijihwang-tang, 구기지황탕)</div>
+    </div>
+    <hr class="divider" />
+
+    <div class="overview-box">
+      본 별첨은 명민원(구기지황탕, PM012)의 비임상 및 임상 안전성·유효성 평가 결과를 종합한 자료입니다.
+      제약사(메디포럼) 주관으로 수행된 효력평가 논문을 기반으로 작성하였으며, 처방 구성 및 제조 정보를 함께 수록합니다.
+    </div>
+
+    <hr class="divider-thin" />
+
+    <!-- 1. 처방 구성 -->
+    <section>
+      <div class="section-title">1. 처방 구성 및 제조공정</div>
+
+      <div class="sub-title">1-1. 처방 구성</div>
+      <p class="body-text">
+        구기지황탕은 육미지황탕에 구기자를 가미한 처방으로, 간신음허(肝腎陰虛)로 인한 인지기능 저하를 주치로 한다.
+        전체 투여량 대비 구기자·숙지황이 각 26.7%로 가장 높은 비율을 차지하며, 백복령·택사·목단피는 보조적으로 구성된다.
+      </p>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>약재명</th>
+            <th>학명</th>
+            <th>1 batch (g)</th>
+            <th>1일 용량 (g)</th>
+            <th>첩당 용량 (g)※</th>
+            <th>구성 비율 (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>구기자</td><td style="color:#666;font-size:12px;">Lycii Fructus</td><td>640</td><td>5.5</td><td>5.3</td><td>26.7%</td></tr>
+          <tr><td>숙지황</td><td style="color:#666;font-size:12px;">Rehmanniae Radix</td><td>640</td><td>5.5</td><td>5.3</td><td>26.7%</td></tr>
+          <tr><td>산약</td><td style="color:#666;font-size:12px;">Dioscoreae Radix</td><td>320</td><td>2.7</td><td>2.7</td><td>13.3%</td></tr>
+          <tr><td>산수유</td><td style="color:#666;font-size:12px;">Corni Fructus</td><td>320</td><td>2.7</td><td>2.7</td><td>13.3%</td></tr>
+          <tr><td>백복령</td><td style="color:#666;font-size:12px;">Hoelen</td><td>160</td><td>1.4</td><td>1.3</td><td>6.7%</td></tr>
+          <tr><td>택사</td><td style="color:#666;font-size:12px;">Alismatis Radix</td><td>160</td><td>1.4</td><td>1.3</td><td>6.7%</td></tr>
+          <tr><td>목단피</td><td style="color:#666;font-size:12px;">Moutan Cortex Radicis</td><td>160</td><td>1.4</td><td>1.3</td><td>6.7%</td></tr>
+          <tr class="total-row"><td colspan="2">합계</td><td>2,400</td><td>20.0</td><td>20.0</td><td>100.0%</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:11.5px;color:#888;margin-top:4px;">
+        ※ 첩당 용량: 1첩=20g 기준 환산 / 1 batch → 230~240포 생산(1포=13g) / 1일 2포 복용 시 생약 20g 상당
+      </p>
+
+      <div class="sub-title" style="margin-top:22px;">1-2. 제조공정</div>
+      <table class="label-table">
+        <tr><td class="label">용매</td><td class="value">정제수 15,000 cc</td></tr>
+        <tr><td class="label">전침</td><td class="value">1시간</td></tr>
+        <tr><td class="label">전탕·추출</td><td class="value">2시간 30분</td></tr>
+        <tr>
+          <td class="label">농축</td>
+          <td class="value">
+            110℃, 3시간 30분 (상압 농축) — 논문 원문 기재 기준<br>
+            <span style="font-size:12px;color:#c0392b;">※ 상압 110℃ 농축은 방향성 약효 성분 손실 가능성이 있음. 추후 감압 농축 전환 검토 필요.</span>
+          </td>
+        </tr>
+        <tr><td class="label">생산량</td><td class="value">230~240포 / 1포 = 13 g</td></tr>
+        <tr><td class="label">품질관리</td><td class="value">HPLC 지표성분 정량 분석, 식약처 승인 규격 및 시험법 준수</td></tr>
+      </table>
+    </section>
+
+    <hr class="divider-thin" />
+
+    <!-- 2. 안전성 -->
+    <section>
+      <div class="section-title">2. 안전성 평가</div>
+
+      <div class="sub-title">2-1. 비임상 안전성 시험 개요</div>
+      <table class="label-table">
+        <tr><td class="label">시험 종류</td><td class="value">4주 및 26주 반복 경구투여 독성시험</td></tr>
+        <tr><td class="label">시험동물</td><td class="value">SD rats (수컷·암컷 각 15마리 또는 5마리)</td></tr>
+        <tr><td class="label">투여용량</td><td class="value">500 / 1,000 / 2,000 mg/kg/day (경구투여, 증류수 대조군)</td></tr>
+        <tr><td class="label">회복군</td><td class="value">4주 회복기간 설정 후 재평가</td></tr>
+        <tr><td class="label">시료 제조</td><td class="value">수추출물 건조분말 (Sun Ten Pharmaceutical 표준화 원료 사용)</td></tr>
+      </table>
+
+      <div class="sub-title" style="margin-top:22px;">2-2. 용량 환산 — 60 kg 성인 기준 (BSA 환산법)</div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>시험 용량 (rat)</th>
+            <th>인체 환산 용량 (g/day)</th>
+            <th>임상 용량 대비</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>500 mg/kg/day</td><td>약 4.9 g/day</td><td><span class="tag tag-orange">임상 용량의 약 25%</span></td></tr>
+          <tr><td>1,000 mg/kg/day</td><td>약 9.7 g/day</td><td><span class="tag tag-orange">임상 용량의 약 51%</span></td></tr>
+          <tr><td>2,000 mg/kg/day</td><td>약 19.4 g/day</td><td><span class="tag tag-red">임상 용량(19.2 g)과 거의 동일</span></td></tr>
+          <tr class="total-row"><td>실제 임상 용량</td><td>19.2 g/day (고형분 기준)</td><td><span class="tag tag-blue">1포 13 g × 2회 × 고형분 약 74%</span></td></tr>
+        </tbody>
+      </table>
+
+      <div class="notice-box">
+        <div class="notice-title">⚠ 안전역(Safety Margin) 검토 필요</div>
+        독성시험 최고 용량(2,000 mg/kg/day, 인체 환산 약 19.4 g/day)이 실제 임상 용량(19.2 g/day)과 거의 동일한 수준입니다.
+        충분한 안전역을 확보하기 위해서는 임상 용량의 최소 10배 이상의 NOAEL이 권장되므로,
+        <strong>추가 고용량 또는 장기 안전성 평가가 필요합니다.</strong>
+      </div>
+
+      <div class="sub-title" style="margin-top:18px;">2-3. 비임상 시험 결과 요약</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>평가 항목</th><th>결과</th><th>비고</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>사망 / 임상증상</td><td>이상 없음</td><td>전 용량군</td></tr>
+          <tr><td>체중 변화</td><td>정상적 증가 유지</td><td>—</td></tr>
+          <tr><td>음수량</td><td>수컷 최고용량군 일시적 증가</td><td>회복군에서 정상화</td></tr>
+          <tr><td>혈액학적 검사</td><td>유의한 이상 없음</td><td>RBC, PLT, WBC, 응고시간 등 정상</td></tr>
+          <tr><td>혈액생화학 검사</td><td>경미한 변화만 관찰</td><td>간기능(AST·ALT·ALP), 신기능(BUN·Cr) 정상</td></tr>
+          <tr><td>장기 중량</td><td>흉선 중량 용량 의존적 증가 (암컷)</td><td>면역기능 활성화로 추정; 독성 징후 아님</td></tr>
+          <tr><td>조직병리학적 검사</td><td>병리학적 변화 없음</td><td>주요 장기 전 항목 이상 없음</td></tr>
+        </tbody>
+      </table>
+
+      <div class="success-box">
+        <div class="success-title">✔ 비임상 안전성 결론</div>
+        <strong>NOAEL: 2,000 mg/kg/day</strong> (시험 최고용량) —
+        4주 및 26주 반복 경구투여에서 독성학적으로 유의한 변화 없이 회복군에서 모든 변화가 가역적으로 회복.
+        단, 실제 임상 용량과 NOAEL이 거의 동일하여 추가 고용량 시험이 바람직합니다.
+      </div>
+
+      <div class="sub-title" style="margin-top:20px;">2-4. 임상 안전성 모니터링 (증례 기반)</div>
+      <table class="label-table">
+        <tr><td class="label">투여 기간</td><td class="value">12개월 (52주)</td></tr>
+        <tr><td class="label">병용 약물</td><td class="value">Donepezil 5 mg, Acetyl-L-Carnitine 590 mg, 당뇨·혈압·협심증 약물 등 10종 이상</td></tr>
+        <tr><td class="label">이상반응</td><td class="value">구기지황탕 관련 유의한 이상반응 없음</td></tr>
+        <tr><td class="label">혈액검사</td><td class="value">3개월마다 시행 — 간기능(AST·ALT), 신기능(BUN·Cr), 혈당(HbA1c) 모두 정상범위 내 유지</td></tr>
+      </table>
+    </section>
+
+    <hr class="divider-thin" />
+
+    <!-- 3. 유효성 -->
+    <section>
+      <div class="section-title">3. 유효성 평가</div>
+
+      <div class="sub-title">3-1. 비임상 유효성 시험 (전임상)</div>
+      <div class="step-card">
+        <div class="step-header">
+          <div class="step-title">Morris Water Maze — 공간학습 및 참조기억 평가</div>
+          <div class="step-note">알츠하이머 동물모델</div>
+        </div>
+        <p>알츠하이머병 형질전환 마우스(3xTg, hPS2m transgenic) 및 TMT 유도 인지손상 모델에 PM012를 경구투여하고, 수중미로 과제로 공간학습·기억 개선 효과를 평가.</p>
+        <div class="two-col">
+          <div>
+            <div class="col-title">시험 조건</div>
+            <ul>
+              <li>동물모델: 3xTg mice (APP·PS1·Tau 변이), hPS2m transgenic mice, TMT-rat</li>
+              <li>투여용량: 400 mg/kg/day (TMT 모델), 기타 모델 별도 적용</li>
+              <li>평가: 4일 획득 + 5일차 탐색 시험 (플랫폼 제거)</li>
+            </ul>
+          </div>
+          <div>
+            <div class="col-title">시료 제작</div>
+            <ul>
+              <li>수추출물 건조분말 (Sun Ten Pharmaceutical)</li>
+              <li>HPLC 지표성분 정량 후 품질 확인</li>
+              <li>증류수 현탁 후 경구 투여</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-title" style="margin-top:18px;">3-2. 작용기전 (메커니즘)</div>
+      <div class="step-card green">
+        <div class="step-header"><div class="step-title">① 신경보호 효과</div></div>
+        <ul>
+          <li>Ibotenic acid 유도 신경세포 손상으로부터 보호</li>
+          <li>ROS(활성산소) 생성 억제 → 신경세포 세포독성 감소</li>
+          <li>Heme oxygenase, COMT 유전자 발현 증가</li>
+        </ul>
+      </div>
+      <div class="step-card green">
+        <div class="step-header"><div class="step-title">② 인지기능 개선</div></div>
+        <ul>
+          <li>정보처리 속도 향상</li>
+          <li>아세틸콜린 합성 증가 (콜린성 신경계 활성화)</li>
+          <li>해마 c-fos 및 NGF(신경성장인자) 발현 증가</li>
+        </ul>
+      </div>
+      <div class="step-card green">
+        <div class="step-header"><div class="step-title">③ 항산화 및 항염 효과</div></div>
+        <ul>
+          <li>구기자·산수유의 강력한 항산화 활성</li>
+          <li>구기자·산수유·숙지황·산약·목단피의 항염 활성</li>
+          <li>염증성 사이토카인 억제 → 신경염증 차단</li>
+        </ul>
+      </div>
+
+      <div class="sub-title" style="margin-top:22px;">3-3. 임상 유효성 평가 (증례보고)</div>
+      <table class="label-table">
+        <tr><td class="label">대상</td><td class="value">80세 여성 / 경도인지장애(MCI) — 상세불명 알츠하이머병 추정진단 / APOE ε2/ε3</td></tr>
+        <tr><td class="label">영상 소견</td><td class="value">광범위 뇌 위축성 변화, 대뇌 백질 소혈관 질환 소견 (DW-MRI)</td></tr>
+        <tr><td class="label">투여 기간</td><td class="value">2020.01 ~ 2021.01 (12개월)</td></tr>
+        <tr><td class="label">처방 제형</td><td class="value">구기지황탕 농축액상제 / 1일 2포 (아침·저녁 식후 30분)</td></tr>
+        <tr><td class="label">병용 치료</td><td class="value">Donepezil 5 mg + Acetyl-L-Carnitine 590 mg 유지</td></tr>
+        <tr><td class="label">IRB 승인</td><td class="value">대전대학교 기관생명윤리위원회 (040647-202108-HR-002-03)</td></tr>
+      </table>
+
+      <div class="sub-title" style="margin-top:22px;">3-4. 인지기능 평가 결과</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>평가도구</th><th>치료 전</th><th>3개월</th><th>6개월</th><th>12개월</th><th>변화량</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>MMSE-KC <span style="font-size:11px;color:#888;">(30점 만점)</span></td>
+            <td>21점</td><td>26점</td><td>28점</td><td>27점</td>
+            <td><strong style="color:#1a6ab5;">▲ +6점</strong></td>
+          </tr>
+          <tr>
+            <td>CERAD <span style="font-size:11px;color:#888;">(종합인지검사)</span></td>
+            <td>33점</td><td>—</td><td>—</td><td>62점</td>
+            <td><strong style="color:#1a6ab5;">▲ +29점</strong></td>
+          </tr>
+          <tr>
+            <td>CDR <span style="font-size:11px;color:#888;">(치매 중증도)</span></td>
+            <td>0.5점</td><td>—</td><td>—</td><td>0.5점</td>
+            <td>유지</td>
+          </tr>
+          <tr>
+            <td>CDR-SB <span style="font-size:11px;color:#888;">(세부항목 합산)</span></td>
+            <td>2점</td><td>—</td><td>—</td><td>1점</td>
+            <td><strong style="color:#1a6ab5;">▼ -1점</strong></td>
+          </tr>
+          <tr>
+            <td>I-ADL <span style="font-size:11px;color:#888;">(도구적 일상생활)</span></td>
+            <td>11점</td><td>—</td><td>—</td><td>5점</td>
+            <td><strong style="color:#1a6ab5;">▼ -6점</strong></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="info-box" style="margin-top:10px;">
+        <div class="info-title">📋 평가도구 설명</div>
+        <ul class="desc-list">
+          <li><span class="term">MMSE-KC</span><span class="def">한국형 간이정신상태검사. 치매 선별에 가장 널리 사용. 높을수록 양호. 24점 미만은 MCI 의심, 20점 미만은 치매 범위.</span></li>
+          <li><span class="term">CERAD</span><span class="def">알츠하이머병 등록 컨소시엄 신경심리검사. 기억력·언어·구성능력 등 종합 평가. 높을수록 양호.</span></li>
+          <li><span class="term">CDR</span><span class="def">임상치매평가척도. 0=정상 / 0.5=경도인지장애 / 1=경도치매 / 2=중등도치매 / 3=중증치매.</span></li>
+          <li><span class="term">CDR-SB</span><span class="def">CDR 6개 세부항목 점수 합산. 낮을수록 양호. MCI 범위는 통상 0.5~2.5점.</span></li>
+          <li><span class="term">I-ADL</span><span class="def">도구적 일상생활 수행능력(전화·교통·쇼핑·요리 등) 평가. 낮을수록 독립성 높음.</span></li>
+        </ul>
+      </div>
+
+      <div class="sub-title" style="margin-top:22px;">3-5. 경도인지장애 일반 경과 대비 비교</div>
+      <table class="data-table">
+        <thead>
+          <tr><th>평가 항목</th><th>MCI 일반 경과</th><th>명민원 치료 경과 (12개월)</th><th>해석</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>질환 진행</td><td>연간 10~15%가 치매로 이행</td><td>인지기능 개선</td><td><span class="tag tag-green">진행 억제 및 역전</span></td></tr>
+          <tr><td>MMSE 변화</td><td>연간 1~3점 감소</td><td>+6점 증가</td><td><span class="tag tag-green">정상범위 회복</span></td></tr>
+          <tr><td>일상생활능력</td><td>점진적 저하</td><td>I-ADL 11 → 5점</td><td><span class="tag tag-green">독립 생활 가능 수준</span></td></tr>
+          <tr><td>치매약 단독 반응</td><td>일시적 개선 후 진행</td><td>병용 시 지속적 개선</td><td><span class="tag tag-green">상승 효과 추정</span></td></tr>
+          <tr><td>뇌 영상 소견</td><td>지속적 위축·병변 진행</td><td>Brain PET-CT 알츠하이머 음성</td><td><span class="tag tag-blue">치료 6개월 시점</span></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <hr class="divider-thin" />
+
+    <!-- 4. 종합 -->
+    <section>
+      <div class="section-title">4. 종합 평가 및 검토 사항</div>
+
+      <div class="success-box">
+        <div class="success-title">✔ 종합 결론</div>
+        <strong>안전성</strong>: 26주 반복 경구투여 독성시험 NOAEL 확보, 임상 12개월 병용 투여에서 유의한 이상반응 없음<br>
+        <strong>유효성</strong>: 알츠하이머 동물모델에서 기전 확인, 경도인지장애 증례에서 인지기능·일상생활능력 유의한 개선<br>
+        <strong>신뢰도</strong>: 제약사(메디포럼) 주관 효력평가, 표준화 원료 및 HPLC 품질관리 적용
+      </div>
+
+      <div class="notice-box" style="margin-top:12px;">
+        <div class="notice-title">⚠ 추가 검토 권장 사항</div>
+        <ul style="padding-left:16px; list-style:disc; margin-top:6px;">
+          <li><strong>안전역 확보</strong>: 독성시험 최고용량 ≈ 실제 임상 용량 — 추가 고용량 시험 필요</li>
+          <li><strong>임상 근거 확대</strong>: 1례 증례보고 수준 — 대조군 포함 다기관 RCT 또는 코호트 연구 필요</li>
+          <li><strong>장기 임상 안전성</strong>: 12개월 이상 장기 투여 안전성 데이터 미확보</li>
+          <li><strong>농축 공정 재검토</strong>: 110℃ 상압 농축 → 방향성 약효 성분 손실 여부 분석 및 감압 농축 전환 검토</li>
+          <li><strong>용량-반응 관계</strong>: 최적 임상 용량 설정을 위한 용량 탐색 연구 필요</li>
+          <li><strong>적응증 확장</strong>: 경도인지장애 외 혈관성 치매, 노인성 인지 저하 등 추가 적응증 검토</li>
+        </ul>
+      </div>
+    </section>
+
+    <hr class="divider-thin" />
+    <div style="text-align:right; font-size:11.5px; color:#bbb; margin-top:10px;">
+      OKRI (옥천당한의약연구소) | 내부 검토용 문서 | 260421
+    </div>
+
+  </div><!-- /page -->
+
+</body>
+</html>
