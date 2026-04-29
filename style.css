@@ -1,0 +1,402 @@
+/* OKRI 리포트 페이지 공통 스타일 — okri.ocd.kr/style.css
+ * 모바일 600px 우선 디자인. 인라인 CSS 대신 페이지에서 <link>로 참조.
+ */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  color: #1C2833;
+  background: #F7F9FC;
+  padding: 20px 16px 40px;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* === 페이지 컨테이너 === */
+.doc, .page {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* === 커버 (문서 표지) === */
+.cover {
+  border-bottom: 3px solid #185FA5;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+}
+.cover-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #1C2833;
+  line-height: 1.35;
+  margin-bottom: 6px;
+}
+.cover-sub {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.cover-meta {
+  text-align: right;
+  font-size: 13px;
+  color: #0C447C;
+}
+.cover-meta b { font-weight: 700; }
+
+/* === 섹션 === */
+section, .section { margin-bottom: 28px; }
+
+.section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a1a1a;
+  border-bottom: 1.5px solid #B5D4F4;
+  padding-bottom: 6px;
+  margin-bottom: 14px;
+}
+.sub-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #1a6ab5;
+  margin: 20px 0 8px;
+  border-bottom: 1px solid #cce0f5;
+  padding-bottom: 4px;
+}
+.section p, .body-text {
+  font-size: 14px;
+  line-height: 1.75;
+  color: #444;
+  margin-bottom: 10px;
+}
+
+/* === 정보 행 (라벨 + 값 한 줄) === */
+.inforow {
+  display: flex;
+  border: 1px solid #dde4ef;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 7px;
+}
+.inforow-label {
+  background: #E6F1FB;
+  color: #0C447C;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 12px;
+  min-width: 80px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+.inforow-val {
+  font-size: 14px;
+  color: #1C2833;
+  padding: 10px 12px;
+  line-height: 1.6;
+}
+
+/* === 페이즈 카드 (단계별 추진 계획) === */
+.phase-card {
+  background: #fff;
+  border: 1px solid #dde4ef;
+  border-radius: 10px;
+  padding: 16px 16px 16px 20px;
+  position: relative;
+  margin-bottom: 10px;
+}
+.phase-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 5px;
+  border-radius: 10px 0 0 10px;
+}
+.phase-1::before { background: #378ADD; }
+.phase-2::before { background: #1D9E75; }
+.phase-3::before { background: #BA7517; }
+.phase-4::before { background: #993556; }
+.phase-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+  gap: 8px;
+}
+.phase-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1C2833;
+  line-height: 1.3;
+}
+.phase-period {
+  font-size: 13px;
+  color: #888;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.phase-desc {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.7;
+  margin-bottom: 14px;
+}
+.phase-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.item-label {
+  font-size: 11px;
+  color: #999;
+  font-weight: 700;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.item-val {
+  font-size: 14px;
+  color: #1C2833;
+  line-height: 1.65;
+}
+
+/* === 어젠다 리스트 (번호원 + 텍스트) === */
+.agenda-list { display: flex; flex-direction: column; gap: 8px; }
+.agenda-item { display: flex; gap: 10px; align-items: flex-start; }
+.agenda-num {
+  min-width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #E6F1FB;
+  color: #0C447C;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.agenda-text {
+  font-size: 15px;
+  color: #1C2833;
+  line-height: 1.6;
+}
+
+/* === 데이터 테이블 (헤더 강조 + 짝수행 음영) === */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0 6px;
+  font-size: 13px;
+}
+.data-table thead tr { background: #1a6ab5; color: #fff; }
+.data-table thead th {
+  padding: 9px 12px;
+  font-weight: 600;
+  font-size: 12.5px;
+  text-align: center;
+}
+.data-table thead th:first-child { text-align: left; }
+.data-table tbody tr { border-bottom: 1px solid #e5e5e5; }
+.data-table tbody tr:nth-child(even) { background: #f8fafd; }
+.data-table tbody tr.total-row { background: #eef3fa; font-weight: 600; }
+.data-table tbody td { padding: 9px 12px; vertical-align: middle; text-align: center; }
+.data-table tbody td:first-child { text-align: left; }
+
+/* === 라벨 테이블 (좌측 색상 라벨 + 우측 값) === */
+.label-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 6px;
+}
+.label-table tr { border-bottom: 1px solid #e8e8e8; }
+.label-table tr:last-child { border-bottom: none; }
+.label-table td.label {
+  background: #1a6ab5;
+  color: #fff;
+  font-weight: 600;
+  font-size: 12.5px;
+  width: 110px;
+  padding: 10px 14px;
+  white-space: nowrap;
+  vertical-align: top;
+}
+.label-table td.value {
+  background: #f7f9fc;
+  padding: 10px 16px;
+  font-size: 13.5px;
+  vertical-align: top;
+}
+
+/* === 스텝 카드 === */
+.step-card {
+  border-left: 5px solid #1a6ab5;
+  background: #f7f9fc;
+  border-radius: 0 8px 8px 0;
+  padding: 18px 22px;
+  margin-bottom: 12px;
+}
+.step-card.green { border-color: #27ae60; background: #f4fbf6; }
+.step-card.orange { border-color: #e67e22; background: #fffbf4; }
+.step-card .step-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.step-card .step-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+.step-card.green .step-title { color: #1a5c30; }
+.step-card .step-note { font-size: 12px; color: #888; }
+.step-card p { font-size: 13.5px; color: #444; margin-bottom: 12px; }
+.step-card .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.step-card .col-title {
+  font-size: 11.5px;
+  color: #1a6ab5;
+  font-weight: 700;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.step-card ul { list-style: none; padding: 0; }
+.step-card ul li {
+  font-size: 13px;
+  color: #333;
+  padding: 2px 0 2px 14px;
+  position: relative;
+}
+.step-card ul li::before {
+  content: '·';
+  position: absolute;
+  left: 3px;
+  color: #1a6ab5;
+  font-weight: 700;
+}
+
+/* === 강조 박스 (info/success/notice/overview) === */
+.info-box, .success-box, .notice-box, .overview-box {
+  padding: 14px 18px;
+  border-radius: 0 6px 6px 0;
+  margin: 12px 0;
+  font-size: 13.5px;
+}
+.info-box { border-left: 4px solid #1a6ab5; background: #f4f8fd; color: #333; }
+.info-box .info-title { font-weight: 700; color: #1a4a80; margin-bottom: 8px; }
+.success-box { border-left: 4px solid #27ae60; background: #f4fbf6; color: #333; }
+.success-box .success-title { font-weight: 700; color: #1e8449; margin-bottom: 6px; }
+.notice-box { border-left: 4px solid #e67e22; background: #fffbf4; color: #333; }
+.notice-box .notice-title { font-weight: 700; color: #c0392b; margin-bottom: 6px; }
+.overview-box { border-left: 4px solid #1a6ab5; background: #f4f8fd; color: #333; }
+
+/* === 태그 (인라인 배지) === */
+.tag {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 12px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+.tag-blue   { background: #ddeeff; color: #1a4a80; }
+.tag-green  { background: #d4edda; color: #155724; }
+.tag-orange { background: #fde8cc; color: #7d4600; }
+.tag-red    { background: #fde8e8; color: #922; }
+
+/* === 정의 리스트 === */
+.desc-list { margin: 0; padding: 0; list-style: none; }
+.desc-list li {
+  display: flex;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px dashed #e0e8f0;
+  font-size: 13px;
+  align-items: flex-start;
+}
+.desc-list li:last-child { border-bottom: none; }
+.desc-list .term { font-weight: 700; color: #1a4a80; white-space: nowrap; min-width: 80px; }
+.desc-list .def { color: #333; }
+
+/* === 구분선 === */
+.divider {
+  border: none;
+  border-top: 2px solid #1a6ab5;
+  margin: 14px 0 30px;
+}
+.divider-thin {
+  border: none;
+  border-top: 1px solid #d8d8d8;
+  margin: 28px 0;
+}
+.page-break {
+  margin: 48px auto;
+  border: none;
+  border-top: 2px dashed #B5D4F4;
+  position: relative;
+  max-width: 600px;
+}
+.page-break::after {
+  content: '별첨';
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #F7F9FC;
+  padding: 0 14px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #185FA5;
+  letter-spacing: 0.1em;
+}
+
+/* === 푸터 === */
+.footer {
+  text-align: right;
+  font-size: 11.5px;
+  color: #bbb;
+  margin-top: 10px;
+}
+
+/* === 일반 본문 태그 === */
+h1, h2, h3, h4 { font-weight: 700; color: #1a1a1a; line-height: 1.3; }
+h1 { font-size: 22px; margin-bottom: 12px; }
+h2 { font-size: 18px; margin: 24px 0 10px; }
+h3 { font-size: 15px; margin: 18px 0 8px; color: #1a6ab5; }
+h4 { font-size: 13.5px; margin: 14px 0 6px; color: #1a6ab5; }
+p { margin-bottom: 10px; line-height: 1.7; }
+ul, ol { padding-left: 22px; margin-bottom: 12px; }
+li { margin-bottom: 4px; line-height: 1.65; }
+a { color: #1a6ab5; text-decoration: none; border-bottom: 1px dashed #1a6ab5; }
+a:hover { color: #0C447C; }
+strong, b { font-weight: 700; color: #1a1a1a; }
+em, i { font-style: italic; }
+blockquote {
+  border-left: 3px solid #B5D4F4;
+  padding-left: 14px;
+  margin: 12px 0;
+  color: #555;
+  font-style: italic;
+}
+code { background: #eef3fa; padding: 2px 5px; border-radius: 3px; font-size: 0.9em; }
+pre {
+  background: #f4f6fa;
+  padding: 12px 14px;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 13px;
+  margin: 12px 0;
+}
+pre code { background: none; padding: 0; }
+
+/* === 모바일 적응 === */
+@media (max-width: 600px) {
+  body { font-size: 15px; padding: 16px 12px 32px; }
+  .data-table { font-size: 12px; }
+  .data-table thead th { font-size: 11.5px; padding: 8px 6px; }
+  .data-table tbody td { padding: 8px 6px; }
+  .label-table td.label { width: 90px; padding: 8px 10px; }
+  .phase-body, .step-card .two-col { grid-template-columns: 1fr; }
+}
