@@ -53,7 +53,7 @@
 
   <div class="cover">
     <div class="cover-title">옥천당 에이전트 시스템 구조</div>
-    <div class="cover-sub">텔레그램 봇 3종 + Cowork 디스패치 + GitHub Pages 발행 인프라 종합도</div>
+    <div class="cover-sub">텔레그램 봇 4종 + Cowork 디스패치 + GitHub Pages 발행 인프라 종합도</div>
     <div class="cover-meta"><b>260430&nbsp;&nbsp;OKRI (옥천당한의약연구소)</b></div>
   </div>
 
@@ -94,7 +94,7 @@
 
       <div class="sub-title">② 인터페이스</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <div class="node"><b>텔레그램</b><span class="small">claude_bot · 원료봇 · 비서봇</span></div>
+        <div class="node"><b>텔레그램</b><span class="small">claude_bot · 원료봇 · 비서봇 · 문헌봇</span></div>
         <div class="node"><b>Cowork 디스패치</b><span class="small">데스크탑·모바일</span></div>
       </div>
 
@@ -105,7 +105,9 @@
       <div class="arrow">＋</div>
       <div class="node node-haiku"><b>원료봇</b> (com.okcheon.원료봇)<span class="small">haiku · 한약재·식품원료 DB 검색 (1,109 + 5,312건)</span></div>
       <div class="arrow">＋</div>
-      <div class="node node-haiku"><b>비서봇</b> (com.okcheon.secretary)<span class="small">haiku 라우터 + 8 도구 — 다른 에이전트·외부 서비스 오케스트레이션</span></div>
+      <div class="node node-haiku"><b>문헌봇</b> (com.okcheon.literaturebot)<span class="small">haiku · 한의 고전 22권 본문 검색 (SQLite FTS5, 100MB)</span></div>
+      <div class="arrow">＋</div>
+      <div class="node node-haiku"><b>비서봇</b> (com.okcheon.secretary)<span class="small">haiku 라우터 + 11 도구 — 원료봇·문헌봇·외부 서비스 오케스트레이션</span></div>
       <div class="arrow">＋</div>
       <div class="node node-sonnet"><b>Cowork 에이전트</b><span class="small">Claude Max 토큰 · 직접 검색·분석·발행 (publish_queue 경유)</span></div>
 
@@ -138,10 +140,10 @@
   <section class="section">
     <div class="section-title">3. 비서봇 내부 구조</div>
 
-    <p class="body-text">비서봇은 자기 안에 8개 도구를 가진 라우터 에이전트. haiku가 사용자 의도를 파악하고 적절한 도구를 호출. 도구 결과를 받아 다음 행동을 결정하는 루프를 최대 8회 반복.</p>
+    <p class="body-text">비서봇은 자기 안에 11개 도구를 가진 라우터 에이전트. haiku가 사용자 의도를 파악하고 적절한 도구를 호출. 도구 결과를 받아 다음 행동을 결정하는 루프를 최대 8회 반복.</p>
 
     <div class="dia">
-      <div class="dia-title">라우터 + 8 도구</div>
+      <div class="dia-title">라우터 + 11 도구</div>
       <div class="node node-haiku"><b>haiku 라우터</b><span class="small">의도 분석 → 도구 선택 → 결과 정리</span></div>
       <div class="arrow">↓ 도구 호출 (multi tool_use 가능)</div>
 
@@ -170,6 +172,18 @@
         <div class="tool-item tool-ext">
           <div class="tname">kor_literature_search</div>
           <div class="tcall">→ Tavily (KCI·RISS·DBpia·ScienceON 한정) — 한국어 학술 검색</div>
+        </div>
+        <div class="tool-item tool-haiku">
+          <div class="tname">classical_lit_search</div>
+          <div class="tcall">→ literature_bot.database (FTS5) — 한의 고전 22권 본문 검색. 책·시대 필터, 간체↔번체·이체자 자동 정규화</div>
+        </div>
+        <div class="tool-item tool-haiku">
+          <div class="tname">classical_first_appearance</div>
+          <div class="tcall">→ literature_bot.database — 약재·용어가 등장하는 책을 시대순 정렬</div>
+        </div>
+        <div class="tool-item tool-haiku">
+          <div class="tname">list_classical_books</div>
+          <div class="tcall">→ literature_bot.database — DB 등록 22권 목록 + 단락 통계</div>
         </div>
       </div>
 
@@ -228,7 +242,7 @@
     <table class="label-table">
       <tr>
         <td class="label">공개 도구</td>
-        <td class="value">정보 검색·분석 도구 (raw_materials, business_chat, deep_analyze, web_search, literature_search, kor_literature_search). 단톡방 멤버 누구나 사용 가능. 사용자 본인 외부 계정·시스템에 쓰기 동작 없음.</td>
+        <td class="value">정보 검색·분석 도구 (raw_materials, business_chat, deep_analyze, web_search, literature_search, kor_literature_search, classical_lit_search, classical_first_appearance, list_classical_books). 단톡방 멤버 누구나 사용 가능. 사용자 본인 외부 계정·시스템에 쓰기 동작 없음.</td>
       </tr>
       <tr>
         <td class="label">개인 도구</td>
@@ -247,7 +261,7 @@
   </section>
 
   <section class="section">
-    <div class="section-title">6. 운영 인프라 (launchd 5종)</div>
+    <div class="section-title">6. 운영 인프라 (launchd 6종)</div>
 
     <table class="data-table">
       <thead>
@@ -256,18 +270,20 @@
       <tbody>
         <tr><td>com.okcheon.claudebot</td><td>claude_bot 항상 실행 (텔레그램 polling)</td><td>RunAtLoad + KeepAlive</td></tr>
         <tr><td>com.okcheon.원료봇</td><td>raw_bot 항상 실행</td><td>RunAtLoad + KeepAlive</td></tr>
-        <tr><td>com.okcheon.secretary</td><td>secretary_bot 항상 실행</td><td>RunAtLoad + KeepAlive</td></tr>
-        <tr><td>com.okcheon.botrestart</td><td>봇 재시작 디스패처 (3봇 어느 하나라도 트리거 가능)</td><td>WatchPaths: ~/claude_bots/.restart_trigger</td></tr>
+        <tr><td>com.okcheon.literaturebot</td><td>literature_bot 항상 실행</td><td>RunAtLoad + KeepAlive</td></tr>
+        <tr><td>com.okcheon.secretary</td><td>secretary_bot 항상 실행 (literature_bot.database를 직접 import해서 도구로 사용)</td><td>RunAtLoad + KeepAlive</td></tr>
+        <tr><td>com.okcheon.botrestart</td><td>봇 재시작 디스패처 (4봇 어느 하나라도 트리거 가능)</td><td>WatchPaths: ~/claude_bots/.restart_trigger</td></tr>
         <tr><td>com.okcheon.publisher</td><td>큐의 HTML을 GitHub Pages로 발행</td><td>WatchPaths: ~/claude_bots/secretary_bot/publish_queue/pending</td></tr>
       </tbody>
     </table>
 
     <div class="sub-title" style="margin-top:18px;">원격 재시작 트리거</div>
     <p class="body-text">코드 수정 후 봇 재시작은 Cowork에서 트리거 파일에 한 줄 echo로 끝남. 사용자가 Terminal 켤 필요 없음.</p>
-    <pre style="background:#f4f6fa;padding:10px 12px;border-radius:6px;font-size:12.5px;overflow-x:auto;">echo "secretary" &gt; ~/claude_bots/.restart_trigger
-echo "claudebot" &gt; ~/claude_bots/.restart_trigger
-echo "rawbot"    &gt; ~/claude_bots/.restart_trigger
-echo "all"       &gt; ~/claude_bots/.restart_trigger</pre>
+    <pre style="background:#f4f6fa;padding:10px 12px;border-radius:6px;font-size:12.5px;overflow-x:auto;">echo "secretary"     &gt; ~/claude_bots/.restart_trigger
+echo "claudebot"     &gt; ~/claude_bots/.restart_trigger
+echo "rawbot"        &gt; ~/claude_bots/.restart_trigger
+echo "literaturebot" &gt; ~/claude_bots/.restart_trigger
+echo "all"           &gt; ~/claude_bots/.restart_trigger</pre>
 
     <div class="sub-title" style="margin-top:18px;">macOS TCC 회피</div>
     <p class="body-text">launchd로 실행되는 프로세스는 <code>~/Documents</code>·<code>~/Desktop</code>·<code>~/Downloads</code>(TCC 보호 영역)의 파일을 읽지 못한다. 봇·인프라·큐 폴더는 모두 홈 디렉터리 루트 아래(<code>~/claude_bots/</code>)에 배치하여 회피.</p>
@@ -360,7 +376,31 @@ echo "all"       &gt; ~/claude_bots/.restart_trigger</pre>
     </div>
   </section>
 
-  <div class="footer">OKRI (옥천당한의약연구소) | 260430 | 영구 페이지 (수정 시 같은 URL에 갱신)</div>
+  <section class="section">
+    <div class="section-title">10. 변경 이력</div>
+
+    <table class="data-table">
+      <thead>
+        <tr><th>날짜</th><th>변경 내용</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>260430 (v2)</td>
+          <td>
+            문헌봇(literature_bot) 신규 추가 — 한의 고전 22권(동의보감·의학입문·증류본초·방약합편·상한론·동무선생 원문·경악전서·만병회춘·세의득효방·화제국방 등) 본문을 SQLite FTS5로 색인. CJK 1글자 토큰화 + 간체↔번체(opencc) + 이체자 정규화(飮↔飲 등)로 정확 검색.<br><br>
+            비서봇에 3개 도구 추가 (총 8 → 11): <code>classical_lit_search</code>, <code>classical_first_appearance</code>, <code>list_classical_books</code>. literature_bot.database를 직접 import해서 텔레그램 왕복 없음.<br><br>
+            launchd 5종 → 6종(<code>com.okcheon.literaturebot</code>). 재시작 트리거에 <code>literaturebot</code> 키 추가.
+          </td>
+        </tr>
+        <tr>
+          <td>260429 (v1)</td>
+          <td>최초 발행. 봇 3종(claude_bot/원료봇/secretary) + Cowork publish_queue 파이프라인 구조 정리.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div class="footer">OKRI (옥천당한의약연구소) | 260430 v2 | 영구 페이지 (수정 시 같은 URL에 갱신)</div>
 
 </div>
 </body>
