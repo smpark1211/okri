@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>옥천당 에이전트 카탈로그</title>
+<link rel="stylesheet" href="/style.css">
+<style>
+/* 카드 그리드 보조 스타일 (style.css에 미반영) */
+.agent-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin: 14px 0;
+}
+@media (min-width: 720px) {
+  .agent-grid { grid-template-columns: 1fr 1fr; }
+}
+.agent-card {
+  border: 1px solid #dde4ef;
+  border-left: 4px solid #1a6ab5;
+  background: #fff;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.agent-card.haiku  { border-left-color: #BA7517; }
+.agent-card.sonnet { border-left-color: #1D9E75; }
+.agent-card.worker { border-left-color: #993556; }
+.agent-card.dispatch { border-left-color: #185FA5; background: #f4f8fd; }
+.agent-card .a-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0C447C;
+  margin-bottom: 2px;
+}
+.agent-card .a-role {
+  font-size: 12.5px;
+  color: #555;
+  margin-bottom: 8px;
+}
+.agent-card .a-meta {
+  font-size: 11.5px;
+  color: #777;
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 3px 10px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #dde4ef;
+}
+.agent-card .a-meta b { color: #444; font-weight: 600; }
+.agent-card .a-status {
+  display: inline-block;
+  font-size: 10.5px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: #1D9E75;
+  color: #fff;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.agent-card .a-tools {
+  font-size: 11.5px;
+  color: #555;
+  margin-top: 6px;
+  background: #f6f9fd;
+  padding: 6px 8px;
+  border-radius: 5px;
+}
+.agent-card .a-tools b { color: #0C447C; }
+.legend-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  font-size: 11.5px;
+  color: #555;
+  margin: 4px 0 10px;
+  padding: 8px 10px;
+  background: #f6f9fd;
+  border-radius: 6px;
+}
+.legend-bar .lg { display: inline-flex; align-items: center; gap: 5px; }
+.legend-bar .lg::before {
+  content: '';
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 2px;
+  border-left: 4px solid;
+}
+.legend-bar .lg.haiku::before  { border-color: #BA7517; }
+.legend-bar .lg.sonnet::before { border-color: #1D9E75; }
+.legend-bar .lg.worker::before { border-color: #993556; }
+.legend-bar .lg.disp::before   { border-color: #185FA5; }
+.perm-matrix {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  margin-top: 8px;
+}
+.perm-matrix th, .perm-matrix td {
+  border: 1px solid #dde4ef;
+  padding: 7px 9px;
+  text-align: left;
+}
+.perm-matrix th {
+  background: #f4f8fd;
+  font-weight: 600;
+  color: #0C447C;
+  font-size: 12px;
+}
+.perm-matrix td.yes { color: #1a5c30; font-weight: 600; }
+.perm-matrix td.no  { color: #999; }
+.perm-matrix td.adm { color: #7a1f33; font-weight: 600; }
+@media (max-width: 600px) {
+  .agent-card .a-meta { grid-template-columns: 70px 1fr; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div class="cover">
+    <div class="cover-title">옥천당 에이전트 카탈로그</div>
+    <div class="cover-sub">현재 운영 중인 모든 에이전트의 단일 진실 출처 (Single Source of Truth)</div>
+    <div class="cover-meta"><b>260430&nbsp;&nbsp;OKRI (옥천당한의약연구소)</b></div>
+  </div>
+
+  <section class="section">
+    <div class="section-title">1. 전체 에이전트 일람</div>
+
+    <div class="legend-bar">
+      <span class="lg haiku">haiku 라우터</span>
+      <span class="lg sonnet">sonnet 라우터/응답</span>
+      <span class="lg worker">백그라운드 워커</span>
+      <span class="lg disp">Cowork 디스패치 (사용자 측)</span>
+    </div>
+
+    <p class="body-text">총 <b>7개 launchd 서비스</b> + Cowork 디스패치 1개. 봇 4종은 텔레그램 polling, 워커 3종은 파일 큐 또는 트리거 watch.</p>
+
+    <div class="agent-grid">
+
+      <div class="agent-card sonnet">
+        <div class="a-name">claude_bot — 이사회 비서/간사 <span class="a-status">운영중</span></div>
+        <div class="a-role">옥천당 이사 3인의 의사결정 지원. 의사결정 명제 부각 페르소나. sonnet 라우터 + 11개 도구 + 2개 발행 도구.</div>
+        <div class="a-tools"><b>도구</b>: query_raw_materials · business_chat · deep_analyze · web_search · literature_search · kor_literature_search · classical_lit_search · classical_first_appearance · list_classical_books · publish_analysis · github_publish_html</div>
+        <div class="a-meta">
+          <b>launchd</b><div>com.okcheon.claudebot</div>
+          <b>모델</b><div>claude-sonnet-4-6</div>
+          <b>권한</b><div>이사회 단톡방(-4716853839) + ADMIN 1:1</div>
+          <b>발언자 메타</b><div>인지용만 — 답변 본문 표기 금지</div>
+          <b>로그</b><div>~/claude_bots/claude_bot/{bot.log, bot_error.log}</div>
+        </div>
+      </div>
+
+      <div class="agent-card haiku">
+        <div class="a-name">secretary_bot — 석만 전용 라우터 <span class="a-status">운영중</span></div>
+        <div class="a-role">석만님 1:1 통합 비서. 라우터는 haiku, 깊이 분석은 sonnet 도구 안에서. 개인 발행 도구 포함.</div>
+        <div class="a-tools"><b>도구</b>: 공개 9개 (위 claude_bot과 동일) + 개인 발행 2개 (publish_analysis, github_publish_html). _require_admin() 게이트로 ADMIN_USER_ID만 발행 도구 호출.</div>
+        <div class="a-meta">
+          <b>launchd</b><div>com.okcheon.secretary</div>
+          <b>모델</b><div>haiku 라우터 + sonnet (deep_analyze/publish_analysis)</div>
+          <b>권한</b><div>석만님(22191413) 1:1 전용</div>
+          <b>최대 iteration</b><div>12회 + 합성 폴백</div>
+          <b>로그</b><div>~/claude_bots/secretary_bot/secretary.log</div>
+        </div>
+      </div>
+
+      <div class="agent-card haiku">
+        <div class="a-name">raw_bot — 원료 검색 <span class="a-status">운영중</span></div>
+        <div class="a-role">한약재·식품원료 정보 조회. secretary_bot·claude_bot이 텔레그램 왕복 없이 직접 import해서 사용.</div>
+        <div class="a-tools"><b>도구</b>: search_master · search_food_db · list_food_ingredients · search_by_effect</div>
+        <div class="a-meta">
+          <b>launchd</b><div>com.okcheon.원료봇</div>
+          <b>모델</b><div>claude-haiku-4-5-20251001</div>
+          <b>데이터</b><div>통합원료DB 1,109건 + 식품원료DB 5,312건 (5개국 공정서: KP/KHP/ChP/JP/THP/DP)</div>
+          <b>권한</b><div>누구나 (단톡방 멤버 포함)</div>
+          <b>로그</b><div>~/claude_bots/raw_bot/원료봇.log</div>
+        </div>
+      </div>
+
+      <div class="agent-card haiku">
+        <div class="a-name">literature_bot — 한의 고전 검색 <span class="a-status">운영중</span></div>
+        <div class="a-role">동의보감·의학입문·증류본초 등 한의 고전 22권 본문 검색. SQLite FTS5 + CJK 1글자 토큰화 + 간체↔번체·이체자 자동 정규화.</div>
+        <div class="a-tools"><b>도구</b>: search_text · first_appearance · list_books</div>
+        <div class="a-meta">
+          <b>launchd</b><div>com.okcheon.literaturebot</div>
+          <b>모델</b><div>claude-haiku-4-5-20251001</div>
+          <b>데이터</b><div>classical_lit.db (~100MB, 22권, 시대 220년~1984년)</div>
+          <b>권한</b><div>누구나</div>
+          <b>로그</b><div>~/claude_bots/literature_bot/literature_bot.log</div>
+        </div>
+      </div>
+
+      <div class="agent-card worker">
+        <div class="a-name">publisher — GitHub Pages 발행 워커 <span class="a-status">운영중</span></div>
+        <div class="a-role">Cowork 디스패치가 publish_queue/pending에 HTML+meta 드롭하면 GitHub Contents API로 PUT 발행. okri.ocd.kr 호스팅.</div>
+        <div class="a-meta">
+          <b>launchd</b><div>com.okcheon.publisher</div>
+          <b>watch</b><div>~/claude_bots/secretary_bot/publish_queue/pending</div>
+          <b>처리 결과</b><div>processed/&lt;id&gt;.url 또는 failed/&lt;id&gt;.error</div>
+          <b>의존성</b><div>stdlib만 (urllib). venv 불필요.</div>
+          <b>로그</b><div>~/claude_bots/secretary_bot/publisher.log</div>
+        </div>
+      </div>
+
+      <div class="agent-card worker">
+        <div class="a-name">board_sender — 텔레그램 파일 송신 워커 <span class="a-status">신규 — 260430</span></div>
+        <div class="a-role">Cowork 디스패치가 send_queue/pending에 파일+meta 드롭하면 Telegram sendDocument(또는 sendMessage)로 발송. chat_id 화이트리스트로 실수 방지.</div>
+        <div class="a-meta">
+          <b>launchd</b><div>com.okcheon.board_sender</div>
+          <b>watch</b><div>~/claude_bots/claude_bot/send_queue/pending</div>
+          <b>허용 chat_id</b><div>ALLOWED_GROUP_CHAT_IDS + ALLOWED_USER_IDS만</div>
+          <b>한도</b><div>50MB (Telegram Bot API sendDocument)</div>
+          <b>로그</b><div>~/claude_bots/claude_bot/send_dispatcher.log</div>
+        </div>
+      </div>
+
+      <div class="agent-card worker">
+        <div class="a-name">botrestart — 재시작 디스패처 <span class="a-status">운영중</span></div>
+        <div class="a-role">~/claude_bots/.restart_trigger 파일 변경 감지하면 restart_bots.sh 실행. 4봇 + boardsender 어느 하나라도 트리거 가능.</div>
+        <div class="a-meta">
+          <b>launchd</b><div>com.okcheon.botrestart</div>
+          <b>watch</b><div>~/claude_bots/.restart_trigger</div>
+          <b>키</b><div>claudebot · rawbot · literaturebot · secretary · boardsender · all</div>
+          <b>로그</b><div>~/claude_bots/restart.log</div>
+        </div>
+      </div>
+
+      <div class="agent-card dispatch">
+        <div class="a-name">Cowork 디스패치 — 사용자 측 에이전트 <span class="a-status">운영중</span></div>
+        <div class="a-role">석만님이 데스크톱·모바일에서 사용. Claude Max 토큰 사용(API 호출비 0). 직접 검색·분석·publish_queue·send_queue 트리거. 봇과 다른 청구 모델.</div>
+        <div class="a-meta">
+          <b>모델</b><div>opus / sonnet (Max 구독)</div>
+          <b>권한</b><div>~/claude_bots/, ~/Documents/Okcheondang/, /신사업/, ~/Library/LaunchAgents/ 등 마운트 폴더</div>
+          <b>네트워크</b><div>allowlist 기반. api.github.com / api.telegram.org 차단 → 큐 패턴 사용</div>
+          <b>주요 활용</b><div>봇 코드 수정 → 재시작 트리거 → 결과 검증, 페이지 발행, 파일 송신</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">2. 권한 매트릭스</div>
+
+    <p class="body-text">각 에이전트의 호출 권한과 외부 시스템 쓰기 권한을 한 표로.</p>
+
+    <table class="perm-matrix">
+      <thead>
+        <tr>
+          <th>에이전트</th>
+          <th>호출 가능자</th>
+          <th>GitHub 발행</th>
+          <th>Telegram 발송</th>
+          <th>비고</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>claude_bot</b></td>
+          <td>이사회 단톡방(3인) + 석만 1:1</td>
+          <td class="yes">✓ 누구나</td>
+          <td class="yes">✓ 응답</td>
+          <td>발행은 단톡방·1:1 모두</td>
+        </tr>
+        <tr>
+          <td><b>secretary_bot</b></td>
+          <td>석만(22191413) 1:1만</td>
+          <td class="adm">✓ ADMIN만</td>
+          <td class="yes">✓ 응답</td>
+          <td>_require_admin() 게이트</td>
+        </tr>
+        <tr>
+          <td><b>raw_bot</b></td>
+          <td>누구나 (멘션 기반)</td>
+          <td class="no">—</td>
+          <td class="yes">✓ 응답</td>
+          <td>읽기 전용 DB 조회</td>
+        </tr>
+        <tr>
+          <td><b>literature_bot</b></td>
+          <td>누구나 (멘션 기반)</td>
+          <td class="no">—</td>
+          <td class="yes">✓ 응답</td>
+          <td>읽기 전용 DB 조회</td>
+        </tr>
+        <tr>
+          <td><b>publisher</b></td>
+          <td>publish_queue 파일</td>
+          <td class="yes">✓ 자동</td>
+          <td class="no">—</td>
+          <td>큐 기반 (Cowork만 드롭 가능)</td>
+        </tr>
+        <tr>
+          <td><b>board_sender</b></td>
+          <td>send_queue 파일</td>
+          <td class="no">—</td>
+          <td class="yes">✓ 자동</td>
+          <td>chat_id 화이트리스트 강제</td>
+        </tr>
+        <tr>
+          <td><b>botrestart</b></td>
+          <td>.restart_trigger 파일</td>
+          <td class="no">—</td>
+          <td class="no">—</td>
+          <td>로컬 launchd 재기동</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <div class="section-title">3. 도구 매핑</div>
+
+    <p class="body-text">claude_bot과 secretary_bot은 같은 9개 공개 도구를 공유. 차이는 호출자(이사회 vs 석만 1:1)와 페르소나(이사회 비서 vs 통합 비서)뿐. 발행 도구는 권한 게이트 차이.</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>도구</th>
+          <th>구현</th>
+          <th>모델</th>
+          <th>비고</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>query_raw_materials</td><td>raw_bot.run_agent() 직접 호출</td><td>haiku (raw_bot 내부)</td><td>CSV는 한 번만 메모리 로드</td></tr>
+        <tr><td>business_chat</td><td>Anthropic API + 봇 SYSTEM_PROMPT</td><td>haiku</td><td>짧은 자문용</td></tr>
+        <tr><td>deep_analyze</td><td>Anthropic API + DEEP_ANALYZE_PROMPT</td><td>sonnet</td><td>text/html 양 모드</td></tr>
+        <tr><td>web_search</td><td>Tavily API + 도메인 신뢰도 필터</td><td>—</td><td>blacklist UGC, whitelist 우대</td></tr>
+        <tr><td>literature_search</td><td>PubMed E-utilities</td><td>—</td><td>PMID·URL 회수</td></tr>
+        <tr><td>kor_literature_search</td><td>Tavily + KCI/RISS/DBpia 한정</td><td>—</td><td>한국어 학술</td></tr>
+        <tr><td>classical_lit_search</td><td>literature_bot.database.search()</td><td>—</td><td>FTS5, CJK 1글자 토큰화</td></tr>
+        <tr><td>classical_first_appearance</td><td>literature_bot.database.book_first_appearance()</td><td>—</td><td>시대순 정렬</td></tr>
+        <tr><td>list_classical_books</td><td>literature_bot.database.list_books()</td><td>—</td><td>22권 목록</td></tr>
+        <tr><td>publish_analysis ★</td><td>sonnet HTML 생성 + GitHub PUT</td><td>sonnet</td><td>토큰 효율 best</td></tr>
+        <tr><td>github_publish_html</td><td>이미 있는 HTML을 GitHub PUT</td><td>—</td><td>특수 케이스</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="section">
+    <div class="section-title">4. 운영·배포 인프라 요약</div>
+
+    <table class="label-table">
+      <tr>
+        <td class="label">코드 위치</td>
+        <td class="value">~/claude_bots/{claude_bot, raw_bot, literature_bot, secretary_bot}/</td>
+      </tr>
+      <tr>
+        <td class="label">launchd plist</td>
+        <td class="value">~/Library/LaunchAgents/com.okcheon.*.plist (총 7개)</td>
+      </tr>
+      <tr>
+        <td class="label">시크릿</td>
+        <td class="value">{bot}/.env (.gitignore 등재). TELEGRAM_TOKEN, ANTHROPIC_API_KEY, ALLOWED_USER_IDS, ALLOWED_GROUP_CHAT_IDS, TAVILY_API_KEY, GITHUB_*</td>
+      </tr>
+      <tr>
+        <td class="label">원격 재시작</td>
+        <td class="value">echo "{name}" &gt; ~/claude_bots/.restart_trigger</td>
+      </tr>
+      <tr>
+        <td class="label">발행 큐</td>
+        <td class="value">~/claude_bots/secretary_bot/publish_queue/{staging,pending,processed,failed}</td>
+      </tr>
+      <tr>
+        <td class="label">송신 큐</td>
+        <td class="value">~/claude_bots/claude_bot/send_queue/{staging,pending,sent,failed}</td>
+      </tr>
+      <tr>
+        <td class="label">호스팅</td>
+        <td class="value">smpark1211/okri (GitHub Pages, 도메인 okri.ocd.kr)</td>
+      </tr>
+      <tr>
+        <td class="label">TCC 회피</td>
+        <td class="value">모든 봇·큐는 ~/claude_bots/ 아래에 둠. ~/Documents 등 보호 폴더 금지.</td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="section">
+    <div class="section-title">5. 진행 중·예정</div>
+
+    <div class="info-box">
+      <div class="info-title">에이전트 관리 체계 (1단계 진행 중)</div>
+      ✓ CLAUDE.md (~/claude_bots/) — 프로젝트 운영 문서<br>
+      ✓ 에이전트 카탈로그 페이지 — 본 페이지<br>
+      ☐ 변경 로그 자동화 — git hook으로 commit 시 changelog 갱신<br>
+      ☐ 헬스 대시보드 — launchd 실시간 상태<br>
+      ☐ 비용 추적 — Anthropic 토큰 사용량 분해
+    </div>
+
+    <div class="info-box" style="margin-top:10px;">
+      <div class="info-title">에이전트 추가 예정</div>
+      ☐ <b>chairman_bot</b> — 대표원장님(구태훈) 비서. user_id·봇토큰 받으면 시작.<br>
+      ☐ <b>president_bot</b> — 대표(구성민) 비서. 동일 패턴.<br>
+      각각 별도 페르소나·SYSTEM_PROMPT, 같은 raw_bot/literature_bot DB 공유.
+    </div>
+
+    <div class="info-box" style="margin-top:10px;">
+      <div class="info-title">기능 확장 후보</div>
+      ☐ <b>두루몽본초학 저술 워크플로우</b> — 본초별 챕터 자동 작성. 저자 승인 후 시작.<br>
+      ☐ <b>맥미니 업무 컴퓨터 이전</b> + 구글드라이브 마운트 → 휴대폰 Dispatch에서 임의 파일 → 이사회방 송신<br>
+      ☐ <b>MCP 서버화</b> — Claude Desktop에서 literature_bot/raw_bot 직접 호출
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">6. 변경 이력</div>
+
+    <table class="data-table">
+      <thead><tr><th>날짜</th><th>변경</th></tr></thead>
+      <tbody>
+        <tr><td>260430</td><td>본 카탈로그 페이지 신규 발행. claude_bot 이사회 비서 전환, send_queue 인프라 신설, board_sender 워커 추가, 도구 11개로 확장 반영.</td></tr>
+        <tr><td>260430</td><td>literature_bot 신설(고전 22권 FTS5). secretary_bot에 통합. agent-system 페이지 v2 발행.</td></tr>
+        <tr><td>260429</td><td>봇 통합 이전(~/claude_for_ocd → ~/claude_bots), .env 분리, secretary_bot 신설(라우터). publish_queue 패턴 도입.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div class="footer">OKRI (옥천당한의약연구소) | 260430 | 영구 페이지 (수정 시 같은 URL 갱신) · <a href="/architecture/agent-system.html">시스템 구조도 보기</a></div>
+
+</div>
+</body>
+</html>
