@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>옥천당 에이전트 권한·접근 매트릭스</title>
+<link rel="stylesheet" href="/style.css">
+<style>
+.tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 8px 0; }
+.tbl-wrap table { min-width: 540px; }
+.perm-mtx td { font-size: 13px; }
+.perm-mtx td.who { font-weight: 600; color: #0C447C; white-space: nowrap; }
+.perm-mtx .yes { color: #1a5c30; font-weight: 700; text-align: center; }
+.perm-mtx .no  { color: #bbb; text-align: center; }
+.perm-mtx .gate { color: #7a1f33; font-weight: 700; text-align: center; }
+.perm-mtx .group { color: #BA7517; font-weight: 700; text-align: center; }
+.legend-mini { font-size: 12px; color: #666; margin: 6px 0 12px; padding: 8px 10px; background: #f6f9fd; border-radius: 5px; }
+.legend-mini b { color: #444; }
+.kv { display: grid; grid-template-columns: 130px 1fr; gap: 4px 12px; font-size: 13px; margin: 6px 0; }
+.kv b { color: #444; font-weight: 600; }
+.kv code { font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div class="cover">
+    <div class="cover-title">권한·접근 매트릭스</div>
+    <div class="cover-sub">누가 · 어디서 · 무엇을 할 수 있는가 — 옥천당 에이전트 보안 모델</div>
+    <div class="cover-meta"><b>260503&nbsp;&nbsp;OKRI (옥천당한의약연구소)</b></div>
+  </div>
+
+  <section class="section">
+    <div class="section-title">1. 사람 × 채널 매트릭스</div>
+
+    <p class="body-text">현재 등록된 사람·채널 기준. user_id는 텔레그램 고유번호, chat_id는 단톡방 ID.</p>
+
+    <div class="legend-mini">
+      <b>○ 1:1</b>: 봇과 다이렉트 메시지 / <b>● 단톡</b>: 그룹 채팅 멘션 / <b>🛡 ADMIN</b>: 개인 도구(발행 등) 호출 권한
+    </div>
+
+    <div class="tbl-wrap">
+    <table class="data-table perm-mtx">
+      <thead>
+        <tr>
+          <th>사람·채널</th>
+          <th>claude_bot<br>(이사회 비서)</th>
+          <th>secretary_bot<br>(석만 전용)</th>
+          <th>raw_bot<br>(원료 검색)</th>
+          <th>literature_bot<br>(고전 검색)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="who">박석만 CTO<br><code class="lbl">22191413</code></td>
+          <td class="yes">○ 1:1 + ● 단톡</td>
+          <td class="gate">○ 1:1 (🛡 ADMIN)</td>
+          <td class="yes">○ 1:1</td>
+          <td class="gate">○ 1:1 (🛡 ADMIN)</td>
+        </tr>
+        <tr>
+          <td class="who">구성민 대표이사<br><code class="lbl">user_id 미등록</code></td>
+          <td class="group">● 단톡 (이사회방)</td>
+          <td class="no">—</td>
+          <td class="group">● 단톡</td>
+          <td class="group">● 단톡</td>
+        </tr>
+        <tr>
+          <td class="who">구태훈 대표원장·CQO<br><code class="lbl">user_id 미등록</code></td>
+          <td class="group">● 단톡 (이사회방)</td>
+          <td class="no">—</td>
+          <td class="group">● 단톡</td>
+          <td class="group">● 단톡</td>
+        </tr>
+        <tr>
+          <td class="who">이사회 단톡방<br><code class="lbl">-4716853839</code></td>
+          <td class="yes">● 멘션 시 응답</td>
+          <td class="no">—</td>
+          <td class="yes">● 멘션 시 응답</td>
+          <td class="yes">● 멘션 시 응답</td>
+        </tr>
+        <tr>
+          <td class="who">기타 단톡방·DM</td>
+          <td class="no">—</td>
+          <td class="no">—</td>
+          <td class="yes">● 멘션 시 응답</td>
+          <td class="yes">● 멘션 시 응답</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="info-box" style="margin-top:10px;">
+      <div class="info-title">미등록 사항</div>
+      구성민 대표·구태훈 원장의 텔레그램 user_id가 1:1 화이트리스트에 등록되지 않은 상태. 단톡방을 통해서만 봇 호출 가능. 두 분 1:1 비서 추가 시 별도 chairman_bot · president_bot 생성 예정.
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">2. 봇별 권한 게이트 상세</div>
+
+    <p class="body-text">각 봇 코드의 <code>is_allowed()</code> · <code>_is_allowed()</code> · <code>_require_admin()</code> 함수가 호출자를 검증.</p>
+
+    <div class="tbl-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>봇</th>
+          <th>1:1 채팅 (.env <code>ALLOWED_USER_IDS</code>)</th>
+          <th>단톡방 (.env <code>ALLOWED_GROUP_CHAT_IDS</code>)</th>
+          <th>개인 도구 (<code>ADMIN_USER_ID</code>)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>claude_bot</b></td>
+          <td>박석만(22191413)만</td>
+          <td>이사회 단톡방(-4716853839)만</td>
+          <td><b>없음</b> — 발행 도구는 단톡방 멤버 누구나</td>
+        </tr>
+        <tr>
+          <td><b>secretary_bot</b></td>
+          <td>박석만(22191413)만</td>
+          <td>설정 안 함 (그룹 사용 불가)</td>
+          <td>박석만(22191413) — 발행 2종 게이트</td>
+        </tr>
+        <tr>
+          <td><b>raw_bot</b></td>
+          <td>화이트리스트 비어있음 → <b>누구나</b></td>
+          <td>그룹은 멘션 기반으로 누구나</td>
+          <td>없음 (조회 도구만 보유)</td>
+        </tr>
+        <tr>
+          <td><b>literature_bot</b></td>
+          <td>박석만(22191413)만</td>
+          <td>그룹은 멘션 기반으로 누구나</td>
+          <td>박석만 — 단, 현재 게이트 사용 도구 없음</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">3. 외부 시스템 쓰기 권한 (시크릿 위치)</div>
+
+    <p class="body-text">모든 시크릿은 <code>~/claude_bots/{bot}/.env</code>에 평문 저장. <code>.gitignore</code>로 git 추적 차단. 회전 시 .env 편집 후 봇 재시작 트리거.</p>
+
+    <div class="tbl-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>외부 시스템</th>
+          <th>보유 봇</th>
+          <th>변수명</th>
+          <th>용도</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Anthropic API</td>
+          <td>claude_bot · secretary_bot · raw_bot · literature_bot</td>
+          <td><code>ANTHROPIC_API_KEY</code></td>
+          <td>LLM 호출 (haiku/sonnet)</td>
+        </tr>
+        <tr>
+          <td>Telegram Bot API</td>
+          <td>claude_bot · secretary_bot · raw_bot · literature_bot · send_dispatcher</td>
+          <td><code>TELEGRAM_TOKEN</code></td>
+          <td>봇별 다른 토큰 (BotFather에서 발급)</td>
+        </tr>
+        <tr>
+          <td>GitHub API</td>
+          <td>claude_bot · secretary_bot · publisher</td>
+          <td><code>GITHUB_TOKEN</code> 외</td>
+          <td>okri.ocd.kr 페이지 PUT (Contents API)</td>
+        </tr>
+        <tr>
+          <td>Tavily Search API</td>
+          <td>claude_bot · secretary_bot</td>
+          <td><code>TAVILY_API_KEY</code></td>
+          <td>web_search · kor_literature_search 도구</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">4. 민감 동작 안전장치</div>
+
+    <div class="info-box">
+      <div class="info-title">텔레그램 파일 송신 (send_dispatcher.py)</div>
+      Cowork 디스패치가 send_queue/pending에 파일+메타 드롭 → 워커가 Telegram sendDocument.<br>
+      <b>chat_id 강제 화이트리스트</b>: <code>ALLOWED_GROUP_CHAT_IDS</code>(이사회) + <code>ALLOWED_USER_IDS</code>(석만) 외에는 <b>발송 거부, failed/로 이동</b>. 실수로 외부 채널에 못 감.
+    </div>
+
+    <div class="info-box" style="margin-top:8px;">
+      <div class="info-title">개인 도구 게이트 (secretary_bot)</div>
+      <code>publish_analysis</code>, <code>github_publish_html</code>은 <code>_require_admin()</code> 함수가 호출자 user_id를 <code>ADMIN_USER_ID</code>와 대조. 불일치 시 즉시 거부 메시지("⛔ 관리자 본인만") 반환. <code>contextvars.ContextVar</code>로 호출자 user_id를 핸들러 진입 시 세팅.
+    </div>
+
+    <div class="notice-box" style="margin-top:8px;">
+      <div class="notice-title">현재 미구현 — 파괴적 동작</div>
+      파일 삭제 · GitHub 파일 삭제 · 캘린더 이벤트 삭제 등 되돌릴 수 없는 동작은 아직 도구로 노출 안 함. 추후 추가 시 명시적 확인 패턴(<code>/confirm_delete &lt;id&gt;</code>) 별도 구현 예정.
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">5. 권한 변경 절차</div>
+
+    <div class="step-card">
+      <div class="step-header"><div class="step-title">사용자 추가 (1:1 화이트리스트)</div></div>
+      <ol style="margin:6px 0 0 18px;padding:0;">
+        <li>대상자에게 봇한테 <code>/start</code> 1번 보내달라고 요청</li>
+        <li>봇 로그에서 user_id 확인 (또는 @userinfobot 활용)</li>
+        <li><code>~/claude_bots/{bot}/.env</code>의 <code>ALLOWED_USER_IDS</code>에 콤마 구분으로 추가</li>
+        <li><code>echo "{bot명}" &gt; ~/claude_bots/.restart_trigger</code></li>
+      </ol>
+    </div>
+
+    <div class="step-card green" style="margin-top:8px;">
+      <div class="step-header"><div class="step-title">단톡방 추가 (claude_bot 그룹 화이트리스트)</div></div>
+      <ol style="margin:6px 0 0 18px;padding:0;">
+        <li>봇을 단톡방에 초대 + 권한 부여</li>
+        <li>단톡방에서 누군가 메시지 1번 보내면 chat_id가 claude_bot/chat_history.db에 기록됨</li>
+        <li>SQLite 조회: <code>sqlite3 ~/claude_bots/claude_bot/chat_history.db "SELECT DISTINCT chat_id, chat_title FROM messages"</code></li>
+        <li><code>~/claude_bots/claude_bot/.env</code>의 <code>ALLOWED_GROUP_CHAT_IDS</code>에 추가</li>
+        <li><code>echo "claudebot" &gt; ~/claude_bots/.restart_trigger</code></li>
+      </ol>
+    </div>
+
+    <div class="step-card orange" style="margin-top:8px;">
+      <div class="step-header"><div class="step-title">시크릿 회전 (토큰 노출 의심 시)</div></div>
+      <ol style="margin:6px 0 0 18px;padding:0;">
+        <li>외부에서 새 토큰 발급 (BotFather / GitHub Settings / Tavily 콘솔)</li>
+        <li><code>~/claude_bots/{bot}/.env</code> 직접 편집</li>
+        <li>해당 봇 재시작 트리거</li>
+        <li>옛 토큰을 외부에서 즉시 revoke</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">6. 관련 페이지</div>
+    <p class="body-text">
+      • <a href="/agents/">에이전트 카탈로그</a> — 봇별 도구·기능<br>
+      • <a href="/health/">헬스 대시보드</a> — 실시간 운영 상태<br>
+      • <a href="/changelog/">변경 이력</a> — git commit 자동 동기화<br>
+      • <a href="/architecture/agent-system.html">시스템 구조도</a> (→ /agents/로 redirect)
+    </p>
+  </section>
+
+  <div class="footer">OKRI (옥천당한의약연구소) | 260503 | 권한 변경 시 본 페이지 수동 갱신 필요</div>
+
+</div>
+</body>
+</html>
