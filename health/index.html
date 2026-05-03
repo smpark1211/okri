@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>옥천당 에이전트 헬스 대시보드</title>
+<link rel="stylesheet" href="/style.css">
+<meta http-equiv="refresh" content="60">
+<style>
+.tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 8px 0; }
+.tbl-wrap table { min-width: 540px; }
+.badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; letter-spacing: 0.02em; }
+.badge.ok    { background: #1D9E75; color: #fff; }
+.badge.fail  { background: #993556; color: #fff; }
+.badge.warn  { background: #BA7517; color: #fff; }
+code.lbl { font-size: 11px; color: #888; }
+.checked-meta { font-size: 12px; color: #888; text-align: right; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<div class="doc">
+
+  <div class="cover">
+    <div class="cover-title">옥천당 에이전트 헬스 대시보드</div>
+    <div class="cover-sub">launchd 7종 + 큐 상태 — 5분 주기 자동 갱신</div>
+    <div class="cover-meta"><b>260503&nbsp;&nbsp;OKRI (옥천당한의약연구소)</b></div>
+  </div>
+
+  <div class="checked-meta">마지막 점검: <b>2026-05-03 04:12:11 KST</b> · 페이지는 60초마다 자동 새로고침</div>
+
+  <div class="notice-box"><div class="notice-title">일부 서비스 다운</div>아래 표 참고. SSH로 들어가서 plist 재로드 필요할 수 있음.</div>
+
+  <section class="section">
+    <div class="section-title">텔레그램 봇 (4종)</div>
+    <div class="tbl-wrap">
+    <table class="data-table">
+      <thead><tr><th>에이전트</th><th>상태</th><th>PID</th><th>마지막 활동</th></tr></thead>
+      <tbody>
+        <tr><td><b>이사회 비서 (claude_bot)</b><br><code class="lbl">com.okcheon.claudebot</code></td><td><span class="badge fail">DOWN</span></td><td><code>—</code></td><td>-</td></tr>
+        <tr><td><b>원료봇 (raw_bot)</b><br><code class="lbl">com.okcheon.원료봇</code></td><td><span class="badge fail">DOWN</span></td><td><code>—</code></td><td>-32395초 전</td></tr>
+        <tr><td><b>문헌봇 (literature_bot)</b><br><code class="lbl">com.okcheon.literaturebot</code></td><td><span class="badge fail">DOWN</span></td><td><code>—</code></td><td>-32395초 전</td></tr>
+        <tr><td><b>비서봇 (secretary_bot)</b><br><code class="lbl">com.okcheon.secretary</code></td><td><span class="badge fail">DOWN</span></td><td><code>—</code></td><td>-32394초 전</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">백그라운드 워커 (3종)</div>
+    <div class="tbl-wrap">
+    <table class="data-table">
+      <thead><tr><th>워커</th><th>상태</th><th>PID</th><th>마지막 활동</th></tr></thead>
+      <tbody>
+        <tr><td><b>GitHub 발행 워커</b><br><code class="lbl">com.okcheon.publisher</code></td><td><span class="badge fail">DOWN</span></td><td><code>—</code></td><td>-32193초 전</td></tr>
+        <tr><td><b>텔레그램 송신 워커</b><br><code class="lbl">com.okcheon.board_sender</code></td><td><span class="badge fail">DOWN</span></td><td><code>—</code></td><td>-32181초 전</td></tr>
+        <tr><td><b>재시작 디스패처</b><br><code class="lbl">com.okcheon.botrestart</code></td><td><span class="badge fail">DOWN</span></td><td><code>—</code></td><td>2일 전</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="body-text" style="font-size:12px;color:#888;margin-top:6px;">워커는 트리거 기반(WatchPaths)이라 평소 PID가 없을 수 있음 — 트리거 시점에만 실행되고 종료됨. 마지막 활동이 최근이면 정상.</p>
+  </section>
+
+  <section class="section">
+    <div class="section-title">큐 상태</div>
+    <div class="tbl-wrap">
+    <table class="data-table">
+      <thead><tr><th>경로</th><th>건수</th></tr></thead>
+      <tbody>
+        <tr><td><code>secretary_bot/publish_queue/pending</code></td><td><b>0</b></td></tr><tr><td><code>secretary_bot/publish_queue/failed</code></td><td><b>0</b></td></tr><tr><td><code>claude_bot/send_queue/pending</code></td><td><b>0</b></td></tr><tr><td><code>claude_bot/send_queue/failed</code></td><td><b>0</b></td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="body-text" style="font-size:12px;color:#888;margin-top:6px;">pending이 5건 이상이거나 failed가 1건 이상이면 경고. SSH 들어가서 직접 확인 필요.</p>
+  </section>
+
+  <section class="section">
+    <div class="section-title">관련 페이지</div>
+    <p class="body-text">• <a href="/agents/">에이전트 카탈로그</a></p>
+    <p class="body-text">• <a href="/changelog/">변경 이력</a></p>
+  </section>
+
+  <div class="footer">OKRI (옥천당한의약연구소) | 260503 | 자동 생성 (build_health.py)</div>
+
+</div>
+</body>
+</html>
